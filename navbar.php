@@ -22,8 +22,10 @@
 				<a href="index.php?page=users" class="nav-item nav-users"><span class='icon-field'><i class="fa fa-users "></i></span> Users</a>
 				<!-- <a href="index.php?page=site_settings" class="nav-item nav-site_settings"><span class='icon-field'><i class="fa fa-cogs text-danger"></i></span> System Settings</a> -->
 			<?php endif; ?>
+            <?php } else { ?>
+            <a href="index.php?page=information" class="nav-item nav-categories"><span class='icon-field'><i class="fa fa-info-circle "></i></span> Information</a>
             <?php } ?>
-		</div>
+        </div>
 
 </nav>
 <script>
