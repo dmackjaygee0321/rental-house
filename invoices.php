@@ -29,7 +29,7 @@
 									<th class="">Tenant</th>
 									<th class="">Invoice</th>
 									<th class="">Amount</th>
-									<th class="text-center">Action</th>
+<!--									<th class="text-center">Action</th>-->
 								</tr>
 							</thead>
 							<tbody>
@@ -52,10 +52,10 @@
 									<td class="text-right">
 										 <p> <b><?php echo number_format($row['amount'],2) ?></b></p>
 									</td>
-									<td class="text-center">
-										<button class="btn btn-sm btn-outline-primary edit_invoice" type="button" data-id="<?php echo $row['id'] ?>" >Edit</button>
-										<button class="btn btn-sm btn-outline-danger delete_invoice" type="button" data-id="<?php echo $row['id'] ?>">Delete</button>
-									</td>
+<!--									<td class="text-center">-->
+<!--										<button class="btn btn-sm btn-outline-primary edit_invoice" type="button" data-id="--><?php //echo $row['id'] ?><!--" >Edit</button>-->
+<!--										<button class="btn btn-sm btn-outline-danger delete_invoice" type="button" data-id="--><?php //echo $row['id'] ?><!--">Delete</button>-->
+<!--									</td>-->
 								</tr>
 								<?php endwhile; ?>
 							</tbody>
