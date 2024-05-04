@@ -35,9 +35,8 @@
 							<tbody>
 								<?php 
 								$i = 1;
-								$invoices = $conn->query("SELECT p.*,concat(t.lastname,', ',t.firstname,' ',t.middlename) as name FROM payments p inner join tenants t on t.id = p.tenant_id where t.status = 1 order by date(p.date_created) desc ");
+								$invoices = $conn->query("select p.*, c.fname, c.lname, h.house_no from payments p left join customer c on c.id = p.customer_id left join houses h on h.id = p.house_id where p.approved_date is not null  ");
 								while($row=$invoices->fetch_assoc()):
-									
 								?>
 								<tr>
 									<td class="text-center"><?php echo $i++ ?></td>
@@ -45,10 +44,10 @@
 										<?php echo date('M d, Y',strtotime($row['date_created'])) ?>
 									</td>
 									<td class="">
-										 <p> <b><?php echo ucwords($row['name']) ?></b></p>
+										 <p> <b><?php echo ucwords($row['fname']) . " " . ucwords($row['lname']) ?></b></p>
 									</td>
 									<td class="">
-										 <p> <b><?php echo ucwords($row['invoice']) ?></b></p>
+										 <p> <b><?php echo ucwords($row['remarks']) ?></b></p>
 									</td>
 									<td class="text-right">
 										 <p> <b><?php echo number_format($row['amount'],2) ?></b></p>
