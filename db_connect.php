@@ -1,3 +1,10 @@
-<?php 
+<?php
 
-$conn= new mysqli('localhost','root','','rental')or die("Could not connect to mysql".mysqli_error($con));
+$conn = mysqli_connect('localhost','autodox','password','house_rental_db1') or die("connection failed". mysql_error());
+
+
+
+?>
+
+
+
