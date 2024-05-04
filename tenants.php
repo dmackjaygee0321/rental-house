@@ -30,14 +30,18 @@
 									<th class="">Monthly Rate</th>
 									<th class="">Outstanding Balance</th>
 									<th class="">Last Payment</th>
+                                    <th class="">Status</th>
 									<th class="text-center">Action</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php 
 								$i = 1;
-								$tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and house_id = t.house_id) as outstanding_balance from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id;");
+								$tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and house_id = t.house_id) as outstanding_balance from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id");
 								while($row=$tenant->fetch_assoc()):
+                                    if($row["status"] == 0 && $row['outstanding_balance'] == 0)
+                                        continue;
+
 								?>
 								<tr>
 									<td class="text-center"><?php echo $i++ ?></td>
@@ -53,13 +57,17 @@
 									<td class="text-right">
 										 <p> <b><?php echo number_format($row['outstanding_balance'],2) ?></b></p>
 									</td>
+                                    <td class="">
+                                        <p><b><?php echo  $row['last_payment'] ?></b></p>
+                                    </td>
 									<td class="">
-										 <p><b><?php echo  $row['last_payment'] ?></b></p>
+										 <p><b><?php echo  ($row['status'] == 0 ? "Close With Outstanding Balance" : "Ongoing") ?></b></p>
 									</td>
 									<td class="text-center">
 										<button class="btn btn-sm btn-outline-primary view_payment" type="button" data-id="<?php echo $row['id'] ?>" >View</button>
-										<button class="btn btn-sm btn-outline-primary edit_tenant" type="button" data-id="<?php echo $row['id'] ?>" >Edit</button>
-										<button class="btn btn-sm btn-outline-danger delete_tenant" type="button" data-id="<?php echo $row['id'] ?>">Delete</button>
+                                        <?php if($row["status"] == 1) { ?>
+										<button class="btn btn-sm btn-outline-danger delete_tenant" type="button" data-id="<?php echo $row['id'] ?>">Close</button>
+                                        <?php } ?>
 									</td>
 								</tr>
 								<?php endwhile; ?>
@@ -97,7 +105,7 @@
 	})
 
 	$('.view_payment').click(function(){
-		uni_modal("Tenants Payments","view_payment.php?id="+$(this).attr('data-id'),"large")
+		uni_modal("Tenants Payments","view_payment.php?id="+$(this).attr('data-id'),"large", true)
 		
 	})
 	$('.edit_tenant').click(function(){
@@ -116,7 +124,7 @@
 			data:{id:$id},
 			success:function(resp){
 				if(resp==1){
-					alert_toast("Data successfully deleted",'success')
+					alert_toast("Data successfully Closed",'success')
 					setTimeout(function(){
 						location.reload()
 					},1500)

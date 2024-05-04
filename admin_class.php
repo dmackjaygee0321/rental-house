@@ -411,8 +411,12 @@ Class Action {
 	}
 	function delete_tenant(){
 		extract($_POST);
+        $tenant = $this->db->query("select * from tenants where id = $id");
+        $tenant = $tenant->fetch_assoc();
+
 		$delete = $this->db->query("UPDATE tenants set status = 0 where id = ".$id);
-		if($delete){
+        $delete1 = $this->db->query("UPDATE bills set is_active = 0 where STR_TO_DATE(due_date, '%Y-%m-%d') > CURRENT_TIMESTAMP() and house_id = ".$tenant["house_id"]." and tenant_id = ".$id);
+		if($delete && $delete1){
 			return 1;
 		}
 	}
