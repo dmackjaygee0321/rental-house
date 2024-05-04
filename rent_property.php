@@ -35,10 +35,11 @@ foreach ($user->fetch_array() as $k => $v) {
 
 </div>
 <script>
+
     // Create the QR code
     $(document).ready(function(){
         var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "http://localhost/house_rental/qr.php",
+            text: "http://localhost/house_rental/qrpage.php",
             width: 256,
             height: 256,
             colorDark : "#000000",

@@ -49,7 +49,9 @@
 
         <?php
         $i = 1;
-        $house = $conn->query("SELECT * FROM houses order by id asc");
+        $house = $conn->query("SELECT * FROM houses h where (
+                       (select count(id) from tenants where house_id = h.id and status = 1) = 0
+                       and (select count(id) from payments where house_id = h.id and approved_date IS NULL and decline_date IS NULL) = 0) order by id asc");
         while($row=$house->fetch_assoc()): ?>
         <div class="col-lg-4" style="padding-top: 30px">
             <div class="card" style="margin: 5px">

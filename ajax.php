@@ -69,6 +69,11 @@ if($action == "save_house"){
 	if($save)
 		echo $save;
 }
+if($action == "payment"){
+	$save = $crud->payment();
+	if($save)
+		echo $save;
+}
 if($action == "delete_house"){
 	$save = $crud->delete_house();
 	if($save)

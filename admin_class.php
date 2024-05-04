@@ -318,6 +318,29 @@ Class Action {
 			return 1;
 		}
 	}
+
+    function payment(){
+        extract($_POST);
+
+        $chk = $this->db->query("select * from houses where id = $propertyId and (
+                       (select count(id) from tenants where house_id = $propertyId and status = 1) > 0
+                       or (select count(id) from payments where house_id = $propertyId and approved_date IS NULL and decline_date IS NULL) > 0)")->num_rows;
+        if($chk != 0)
+            return 2;
+
+        if(isset($_FILES["file"])) {
+            $file = $_FILES["file"]["name"];
+            $target_dir = "./uploads/";
+            $target_file = $target_dir . basename($_FILES["file"]["name"]);
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+        }
+
+        $chk = $this->db->query("insert into payments values (null, $customerId, $propertyId, $payment, '', current_timestamp, '$file', null, null)");
+
+        if($chk)
+            return 1;
+    }
 	function save_tenant(){
 		extract($_POST);
 		$data = " firstname = '$firstname' ";
