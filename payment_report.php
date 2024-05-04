@@ -65,7 +65,7 @@ $month_of = isset($_GET['month_of']) ? $_GET['month_of'] : date('Y-m');
 									<?php 
 									$i = 1;
 									$tamount = 0;
-									$payments  = $conn->query("SELECT p.*,concat(t.lastname,', ',t.firstname,' ',t.middlename) as name,h.house_no FROM payments p inner join tenants t on t.id = p.tenant_id inner join houses h on h.id = t.house_id where date_format(p.date_created,'%Y-%m') = '$month_of' order by unix_timestamp(date_created)  asc");
+									$payments  = $conn->query("select p.*, c.fname, c.lname, h.house_no from payments p left join customer c on c.id = p.customer_id left join houses h on h.id = p.house_id where p.approved_date is not null and date_format(p.date_created,'%Y-%m') = '$month_of';");
 									if($payments->num_rows > 0 ):
 									while($row=$payments->fetch_assoc()):
 										$tamount += $row['amount'];
@@ -73,7 +73,7 @@ $month_of = isset($_GET['month_of']) ? $_GET['month_of'] : date('Y-m');
 									<tr>
 										<td><?php echo $i++ ?></td>
 										<td><?php echo date('M d,Y',strtotime($row['date_created'])) ?></td>
-										<td><?php echo ucwords($row['name']) ?></td>
+										<td><?php echo ucwords($row['fname']). " ".ucwords($row['lname']) ?></td>
 										<td><?php echo $row['house_no'] ?></td>
 										<td><?php echo $row['invoice'] ?></td>
 										<td class="text-right"><?php echo number_format($row['amount'],2) ?></td>
