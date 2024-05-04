@@ -336,10 +336,57 @@ Class Action {
             move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
         }
 
-        $chk = $this->db->query("insert into payments values (null, $customerId, $propertyId, $payment, '', current_timestamp, '$file', null, null)");
+        $chk = $this->db->query("insert into payments values (null, $customerId, $propertyId, $payment, '', current_timestamp, '$file', null, null, 'Initial Payment', null)");
 
         if($chk)
             return 1;
+    }
+
+    function approve_payment() {
+        extract($_POST);
+        date_default_timezone_set('Asia/Manila');
+
+        $payment = $this->db->query("SELECT * FROM payments where id = $id");
+        $payment = $payment->fetch_assoc();
+
+
+        $house = $this->db->query("SELECT * FROM houses where id =".$payment["house_id"]);
+        $house = $house->fetch_assoc();
+
+
+        if ($type === "Initial Payment") {
+            $currentDate = new DateTime();
+            $currentDate->add(new DateInterval('P2M'));
+
+            $due_date = $currentDate->format('Y-m-d');
+            $remaining = $house["price"] - $payment["amount"];
+
+            $this->db->query("INSERT INTO tenants values(null, ".$house["id"].", 1, current_timestamp, ".$payment["customer_id"].")");
+
+            $tenant_id = $this->db->insert_id;
+
+            if($remaining > 0) {
+                $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$payment["house_id"].", $remaining, 0, '$due_date', current_timestamp, 1)");
+            }
+
+            for ($x = 1;$x <= 10; $x++) {
+                $currentDate->add(new DateInterval('P1M'));
+                $due_date = $currentDate->format('Y-m-d');
+                $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$payment["house_id"].", ".$house["price"].", 0, '$due_date', current_timestamp, 1)");
+            }
+        }
+
+        $this->db->query("update payments set approved_date = current_timestamp where id =".$id);
+
+        return 1;
+    }
+
+    function decline_payment() {
+        extract($_POST);
+
+        $this->db->query("update payments set decline_date = current_timestamp, remarks = '$remarks' where id =".$id);
+
+        return 1;
     }
 	function save_tenant(){
 		extract($_POST);

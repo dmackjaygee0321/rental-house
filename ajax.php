@@ -74,6 +74,18 @@ if($action == "payment"){
 	if($save)
 		echo $save;
 }
+
+if($action == "approve_payment"){
+	$save = $crud->approve_payment();
+	if($save)
+		echo $save;
+}
+
+if($action == "decline_payment"){
+	$save = $crud->decline_payment();
+	if($save)
+		echo $save;
+}
 if($action == "delete_house"){
 	$save = $crud->delete_house();
 	if($save)
