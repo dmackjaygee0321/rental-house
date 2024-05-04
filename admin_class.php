@@ -358,7 +358,7 @@ Class Action {
             $currentDate = new DateTime();
             $due_date = $currentDate->format('Y-m-d');
 
-            $remaining = $house["price"] - $payment["amount"];
+            $remaining = ($house["price"] * 2) - $payment["amount"];
 
             $this->db->query("INSERT INTO tenants values(null, ".$house["id"].", 1, current_timestamp, ".$payment["customer_id"].")");
 
