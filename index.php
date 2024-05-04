@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-	
+
 <?php session_start(); ?>
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title><?php echo isset($_SESSION['system']['name']) ? $_SESSION['system']['name'] : '' ?></title>
- 	
+
 
 <?php
   if(!isset($_SESSION['login_id']))
     header('location:login.php');
- include('./header.php'); 
- // include('./auth.php'); 
+ include('./header.php');
+ // include('./auth.php');
  ?>
 
 </head>
@@ -66,11 +66,16 @@
     <div class="toast-body text-white">
     </div>
   </div>
-  
+
   <main id="view-panel" >
-      <?php $page = isset($_GET['page']) ? $_GET['page'] :'home'; ?>
+      <?php
+            $page = isset($_GET['page']) ? $_GET['page'] :'home';
+
+            if($page === 'home' && $_SESSION['login_type'] === 3)
+                $page = 'customerHome';
+      ?>
   	<?php include $page.'.php' ?>
-  	
+
 
   </main>
 
@@ -103,7 +108,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" id="close" data-dismiss="modal">Cancel</button>
       </div>
       </div>
     </div>
@@ -143,10 +148,10 @@
             keyboard:false,
             focus:true
           })
-          end_load()  
+          end_load()
 
 }
-  window.uni_modal = function($title = '' , $url='',$size=""){
+  window.uni_modal = function($title = '' , $url='',$size="", $isActionHide = false){
     start_load()
     $.ajax({
         url:$url,
@@ -158,6 +163,10 @@
             if(resp){
                 $('#uni_modal .modal-title').html($title)
                 $('#uni_modal .modal-body').html(resp)
+                if($isActionHide) {
+                    $("#submit").remove()
+                    $("#close").html("Close")
+                }
                 if($size != ''){
                     $('#uni_modal .modal-dialog').addClass($size)
                 }else{
@@ -209,5 +218,5 @@ window._conf = function($msg='',$func='',$params = []){
     placeholder:"Please select here",
     width: "100%"
   })
-</script>	
+</script>
 </html>

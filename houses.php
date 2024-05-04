@@ -18,9 +18,9 @@
 								<label class="control-label">Property No</label>
 								<input type="text" class="form-control" name="house_no" required="">
 							</div>
-							<div class="form-group">
+							<div class="form-group" style="display: none">
 								<label class="control-label">Category</label>
-								<select name="category_id" id="" class="custom-select" required>
+								<select name="category_id" id="" class="custom-select"  >
 									<?php 
 									$categories = $conn->query("SELECT * FROM categories order by name asc");
 									if($categories->num_rows > 0):
@@ -71,7 +71,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php 
+								<?php
 								$i = 1;
 								$house = $conn->query("SELECT h.*,c.name as cname FROM houses h inner join categories c on c.id = h.category_id order by id asc");
 								while($row=$house->fetch_assoc()):

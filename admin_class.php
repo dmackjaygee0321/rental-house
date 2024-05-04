@@ -297,9 +297,8 @@ Class Action {
 		extract($_POST);
 		$data = " house_no = '$house_no' ";
 		$data .= ", description = '$description' ";
-		$data .= ", category_id = '$category_id' ";
 		$data .= ", price = '$price' ";
-		$chk = $this->db->query("SELECT * FROM houses where house_no = '$house_no' ")->num_rows;
+		$chk = $this->db->query("SELECT * FROM houses where house_no = '$house_no' and id !=  $id ")->num_rows;
 		if($chk > 0 ){
 			return 2;
 			exit;
