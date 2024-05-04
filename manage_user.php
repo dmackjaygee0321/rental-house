@@ -1,11 +1,18 @@
 <?php 
 include('db_connect.php');
 session_start();
-if(isset($_GET['id'])){
-$user = $conn->query("SELECT * FROM users where id =".$_GET['id']);
-foreach($user->fetch_array() as $k =>$v){
-	$meta[$k] = $v;
-}
+if(isset($_GET['id'])) {
+    if ($_SESSION["login_type"] != 3) {
+        $user = $conn->query("SELECT * FROM users where id =" . $_GET['id']);
+        foreach ($user->fetch_array() as $k => $v) {
+            $meta[$k] = $v;
+        }
+    } else {
+        $user = $conn->query("SELECT * FROM customer where id =" . $_GET['id']);
+        foreach ($user->fetch_array() as $k => $v) {
+            $meta[$k] = $v;
+        }
+    }
 }
 ?>
 <div class="container-fluid">
@@ -13,10 +20,31 @@ foreach($user->fetch_array() as $k =>$v){
 	
 	<form action="" id="manage-user">	
 		<input type="hidden" name="id" value="<?php echo isset($meta['id']) ? $meta['id']: '' ?>">
-		<div class="form-group">
-			<label for="name">Name</label>
-			<input type="text" name="name" id="name" class="form-control" value="<?php echo isset($meta['name']) ? $meta['name']: '' ?>" required>
-		</div>
+        <?php
+            if($_SESSION["login_type"] != 3) {
+        ?>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" class="form-control" value="<?php echo isset($meta['name']) ? $meta['name']: '' ?>" required>
+            </div>
+        <?php } ?>
+
+        <?php
+        if($_SESSION["login_type"] == 3) {
+            ?>
+            <div class="form-group">
+                <label for="fname">First Name</label>
+                <input type="text" name="fname" id="fname" class="form-control" value="<?php echo isset($meta['fname']) ? $meta['fname']: '' ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input type="text" name="lname" id="lname" class="form-control" value="<?php echo isset($meta['lname']) ? $meta['lname']: '' ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">Contact</label>
+                <input type="text" name="contact" id="contact" class="form-control" value="<?php echo isset($meta['contact']) ? $meta['contact']: '' ?>" required>
+            </div>
+        <?php } ?>
 		<div class="form-group">
 			<label for="username">Username</label>
 			<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">

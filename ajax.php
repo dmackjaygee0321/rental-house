@@ -8,6 +8,11 @@ if($action == 'login'){
 	if($login)
 		echo $login;
 }
+if($action == 'customerSignup'){
+	$customerSignup = $crud->customerSignup();
+	if($customerSignup)
+		echo $customerSignup;
+}
 if($action == 'login2'){
 	$login = $crud->login2();
 	if($login)

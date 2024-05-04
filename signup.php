@@ -125,17 +125,34 @@ div#login-right::before {
 			<br>
   			<div class="card col-md-8">
   				<div class="card-body">
+                    <H1>Sign Up</H1>
   					<form id="login-form" >
   						<div class="form-group">
-  							<label for="username" class="control-label">Username:</label>
-  							<input type="text" id="username" name="username" class="form-control">
+  							<label for="fname" class="control-label">First Name:</label>
+  							<input type="text" id="fname" name="fname" class="form-control">
   						</div>
+                        <div class="form-group">
+                            <label for="lname" class="control-label">Last Name:</label>
+                            <input type="text" id="lname" name="lname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact" class="control-label">Contact:</label>
+                            <input type="contact" id="contact" name="contact" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="control-label">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label">Password:</label>
+                            <input type="password" id="password" name="password" class="form-control">
+                        </div>
   						<div class="form-group">
-  							<label for="password" class="control-label">Password:</label>
-  							<input type="password" id="password" name="password" class="form-control">
+  							<label for="confirm_password" class="control-label">Confirm Password:</label>
+  							<input type="password" id="confirm_password" name="confirm_password" class="form-control">
   						</div>
-  						<center><button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button></center>
-                        <center><a href="signup.php">Create an account?</a></center>
+  						<center><button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Sign up</button></center>
+                        <center><a href="login.php">Login Now</a></center>
   					</form>
   				</div>
   			</div>
@@ -156,7 +173,7 @@ div#login-right::before {
 		if($(this).find('.alert-danger').length > 0 )
 			$(this).find('.alert-danger').remove();
 		$.ajax({
-			url:'ajax.php?action=login',
+			url:'ajax.php?action=customerSignup',
 			method:'POST',
 			data:$(this).serialize(),
 			error:err=>{
@@ -167,8 +184,12 @@ div#login-right::before {
 			success:function(resp){
 				if(resp == 1){
 					location.href ='index.php?page=home';
-				}else{
-					$('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
+				} else if (resp == 2) {
+                    $('#login-form').prepend('<div class="alert alert-danger">Email is already Registered!</div>')
+                    $('#login-form button[type="button"]').removeAttr('disabled').html('Login');
+
+                }else{
+					$('#login-form').prepend('<div class="alert alert-danger">Password and Confirm Password Mismatch!</div>')
 					$('#login-form button[type="button"]').removeAttr('disabled').html('Login');
 				}
 			}

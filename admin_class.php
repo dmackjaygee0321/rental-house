@@ -19,9 +19,11 @@ Class Action {
 		
 			extract($_POST);		
 			$qry = $this->db->query("SELECT * FROM users where username = '".$username."' and password = '".md5($password)."' ");
-			if($qry->num_rows > 0){
+            $customerQry = $this->db->query("SELECT * FROM customer where email = '".$username."' and password = '".md5($password)."' ");
+
+            if($qry->num_rows > 0){
 				foreach ($qry->fetch_array() as $key => $value) {
-					if($key != 'passwors' && !is_numeric($key))
+					if($key != 'password' && !is_numeric($key))
 						$_SESSION['login_'.$key] = $value;
 				}
 				if($_SESSION['login_type'] != 1){
@@ -32,7 +34,16 @@ Class Action {
 					exit;
 				}
 					return 1;
-			}else{
+			} else if($customerQry->num_rows > 0){
+                foreach ($customerQry->fetch_array() as $key => $value) {
+                    if($key != 'password' && !is_numeric($key))
+                        $_SESSION['login_'.$key] = $value;
+                }
+                $_SESSION["login_name"] = $_SESSION["login_fname"] . " " . $_SESSION["login_lname"];
+                $_SESSION['login_type'] = 3;
+                return 1;
+                exit;
+            } else {
 				return 3;
 			}
 	}
@@ -68,6 +79,26 @@ Class Action {
 			return 3;
 		}
 	}
+
+    function customerSignup() {
+        extract($_POST);
+
+       if($password != $confirm_password){
+            return 3;
+            exit;
+        }
+
+        $chk = $this->db->query("Select * from customer where email = '$email'")->num_rows;
+        if($chk > 0){
+            return 2;
+            exit;
+        }
+        $password = md5($password);
+        $save = $this->db->query("INSERT INTO customer values (null, '$fname', '$lname', '$email', '$contact', '$password', current_timestamp)");
+
+        if($save)
+            return 1;
+    }
 	function logout(){
 		session_destroy();
 		foreach ($_SESSION as $key => $value) {
@@ -83,29 +114,50 @@ Class Action {
 		header("location:../index.php");
 	}
 
-	function save_user(){
-		extract($_POST);
-		$data = " name = '$name' ";
-		$data .= ", username = '$username' ";
-		if(!empty($password))
-		$data .= ", password = '".md5($password)."' ";
-		$data .= ", type = '$type' ";
-		if($type == 1)
-			$establishment_id = 0;
-		$data .= ", establishment_id = '$establishment_id' ";
-		$chk = $this->db->query("Select * from users where username = '$username' and id !='$id' ")->num_rows;
-		if($chk > 0){
-			return 2;
-			exit;
-		}
-		if(empty($id)){
-			$save = $this->db->query("INSERT INTO users set ".$data);
-		}else{
-			$save = $this->db->query("UPDATE users set ".$data." where id = ".$id);
-		}
-		if($save){
-			return 1;
-		}
+	function save_user()
+    {
+        extract($_POST);
+        if ($_SESSION["login_type"] != 3) {
+            $data = " name = '$name' ";
+            $data .= ", username = '$username' ";
+            if (!empty($password))
+                $data .= ", password = '" . md5($password) . "' ";
+            $data .= ", type = '$type' ";
+            if ($type == 1)
+                $establishment_id = 0;
+            $data .= ", establishment_id = '$establishment_id' ";
+            $chk = $this->db->query("Select * from users where username = '$username' and id !='$id' ")->num_rows;
+            if ($chk > 0) {
+                return 2;
+                exit;
+            }
+            if (empty($id)) {
+                $save = $this->db->query("INSERT INTO users set " . $data);
+            } else {
+                $save = $this->db->query("UPDATE users set " . $data . " where id = " . $id);
+            }
+            if ($save) {
+                return 1;
+            }
+        } else {
+            $chk = $this->db->query("Select * from customer where email = '$username' and id !='$id' ")->num_rows;
+            if ($chk > 0) {
+                return 2;
+                exit;
+            }
+
+            $updatePassword = "";
+            if (!empty($password))
+                $updatePassword = ", password = '" . md5($password) . "' ";
+
+            $save = $this->db->query("UPDATE customer set fname = '$fname', lname = '$lname', email = '$username', contact = '$contact' $updatePassword where id = " . $id);
+
+
+            if ($save) {
+                return 1;
+            }
+
+        }
 	}
 	function delete_user(){
 		extract($_POST);
