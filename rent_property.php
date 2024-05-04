@@ -34,7 +34,6 @@ foreach ($user->fetch_array() as $k => $v) {
             </div>
 
 </div>
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
     // Create the QR code
     $(document).ready(function(){

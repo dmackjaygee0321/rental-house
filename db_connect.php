@@ -1,6 +1,6 @@
 <?php
 
-$conn = mysqli_connect('localhost','autodox','password','house_rental_db1') or die("connection failed". mysql_error());
+$conn = mysqli_connect('localhost','root','','rental') or die("connection failed". mysql_error());
 
 
 
