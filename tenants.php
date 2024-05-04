@@ -36,21 +36,13 @@
 							<tbody>
 								<?php 
 								$i = 1;
-								$tenant = $conn->query("SELECT t.*,concat(t.lastname,', ',t.firstname,' ',t.middlename) as name,h.house_no,h.price FROM tenants t inner join houses h on h.id = t.house_id where t.status = 1 order by h.house_no desc ");
+								$tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id) as outstanding_balance from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id;");
 								while($row=$tenant->fetch_assoc()):
-									$months = abs(strtotime(date('Y-m-d')." 23:59:59") - strtotime($row['date_in']." 23:59:59"));
-									$months = floor(($months) / (30*60*60*24));
-									$payable = $row['price'] * $months;
-									$paid = $conn->query("SELECT SUM(amount) as paid FROM payments where tenant_id =".$row['id']);
-									$last_payment = $conn->query("SELECT * FROM payments where tenant_id =".$row['id']." order by unix_timestamp(date_created) desc limit 1");
-									$paid = $paid->num_rows > 0 ? $paid->fetch_array()['paid'] : 0;
-									$last_payment = $last_payment->num_rows > 0 ? date("M d, Y",strtotime($last_payment->fetch_array()['date_created'])) : 'N/A';
-									$outstanding = $payable - $paid;
 								?>
 								<tr>
 									<td class="text-center"><?php echo $i++ ?></td>
 									<td>
-										<?php echo ucwords($row['name']) ?>
+										<?php echo ucwords($row['fname']) . " " . ucwords($row['lname']) ?>
 									</td>
 									<td class="">
 										 <p> <b><?php echo $row['house_no'] ?></b></p>
@@ -59,10 +51,10 @@
 										 <p> <b><?php echo number_format($row['price'],2) ?></b></p>
 									</td>
 									<td class="text-right">
-										 <p> <b><?php echo number_format($outstanding,2) ?></b></p>
+										 <p> <b><?php echo number_format($row['outstanding_balance'],2) ?></b></p>
 									</td>
 									<td class="">
-										 <p><b><?php echo  $last_payment ?></b></p>
+										 <p><b><?php echo  $row['last_payment'] ?></b></p>
 									</td>
 									<td class="text-center">
 										<button class="btn btn-sm btn-outline-primary view_payment" type="button" data-id="<?php echo $row['id'] ?>" >View</button>

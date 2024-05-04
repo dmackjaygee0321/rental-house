@@ -356,9 +356,8 @@ Class Action {
 
         if ($type === "Initial Payment") {
             $currentDate = new DateTime();
-            $currentDate->add(new DateInterval('P2M'));
-
             $due_date = $currentDate->format('Y-m-d');
+
             $remaining = $house["price"] - $payment["amount"];
 
             $this->db->query("INSERT INTO tenants values(null, ".$house["id"].", 1, current_timestamp, ".$payment["customer_id"].")");
@@ -369,6 +368,7 @@ Class Action {
                 $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$payment["house_id"].", $remaining, 0, '$due_date', current_timestamp, 1)");
             }
 
+            $currentDate->add(new DateInterval('P2M'));
             for ($x = 1;$x <= 10; $x++) {
                 $currentDate->add(new DateInterval('P1M'));
                 $due_date = $currentDate->format('Y-m-d');
