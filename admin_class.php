@@ -298,6 +298,9 @@ Class Action {
 		$data = " house_no = '$house_no' ";
 		$data .= ", description = '$description' ";
 		$data .= ", price = '$price' ";
+
+        if(!$id)
+            $id = 0;
 		$chk = $this->db->query("SELECT * FROM houses where house_no = '$house_no' and id !=  $id ")->num_rows;
 		if($chk > 0 ){
 			return 2;
@@ -376,7 +379,7 @@ Class Action {
             }
         }
 
-        $this->db->query("update payments set approved_date = current_timestamp where id =".$id);
+        $this->db->query("update payments set approved_date = current_timestamp, remarks = '$remarks' where id =".$id);
 
         return 1;
     }

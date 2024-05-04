@@ -108,22 +108,26 @@
 	$(".approve").on("click", function () {
         const id = $(this).attr("data-id")
         const type = $(this).attr("data-type")
-        if (confirm("Are you sure want to approve this payment?")) {
-            start_load()
-            $.ajax({
-                url:'ajax.php?action=approve_payment',
-                method:'POST',
-                data:{id, type},
-                success:function(resp){
-                    if(resp==1){
-                        alert_toast("Data successfully deleted",'success')
-                        setTimeout(function(){
-                            location.reload()
-                        },1500)
 
+        const remarks = prompt("Enter Invoice");
+        if(remarks) {
+            if (confirm("Are you sure want to approve this payment?")) {
+                start_load()
+                $.ajax({
+                    url: 'ajax.php?action=approve_payment',
+                    method: 'POST',
+                    data: {id, type, remarks},
+                    success: function (resp) {
+                        if (resp == 1) {
+                            alert_toast("Data successfully deleted", 'success')
+                            setTimeout(function () {
+                                location.reload()
+                            }, 1500)
+
+                        }
                     }
-                }
-            })
+                })
+            }
         }
     })
 
@@ -131,23 +135,25 @@
     $(".decline").on("click", function () {
         const id = $(this).attr("data-id")
         const remarks = prompt("Comment");
-        if (confirm("Are you sure want to decline this payment?")) {
-            start_load()
-            $.ajax({
-                url:'ajax.php?action=decline_payment',
-                method:'POST',
-                data:{id, remarks},
-                success:function(resp){
-                    if(resp==1){
-                        alert_toast("Data successfully deleted",'success')
-                        setTimeout(function(){
-                            location.reload()
-                        },1500)
+        if(remarks) {
+            if (confirm("Are you sure want to decline this payment?")) {
+                start_load()
+                $.ajax({
+                    url: 'ajax.php?action=decline_payment',
+                    method: 'POST',
+                    data: {id, remarks},
+                    success: function (resp) {
+                        if (resp == 1) {
+                            alert_toast("Data successfully deleted", 'success')
+                            setTimeout(function () {
+                                location.reload()
+                            }, 1500)
 
+                        }
                     }
-                }
-            })
+                })
 
+            }
         }
     })
     $(".view").on("click", function () {

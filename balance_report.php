@@ -64,8 +64,8 @@
 										<td><?php echo ucwords($row['fname']) . " " . ucwords($row['lname']) ?></td>
 										<td><?php echo $row['house_no'] ?></td>
 										<td class="text-right"><?php echo $row["due_date"] ?></td>
+                                        <td class="text-right"><?php echo number_format($row["amount"],2) ?></td>
 										<td class="text-right"><?php echo number_format($row["amount_paid"],2) ?></td>
-										<td class="text-right"><?php echo number_format($row["amount"],2) ?></td>
 										<td class="text-right"><?php echo number_format($balance,2) ?></td>
 									</tr>
 								<?php endwhile; ?>

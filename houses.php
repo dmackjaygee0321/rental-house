@@ -73,14 +73,13 @@
 							<tbody>
 								<?php
 								$i = 1;
-								$house = $conn->query("SELECT h.*,c.name as cname FROM houses h inner join categories c on c.id = h.category_id order by id asc");
+								$house = $conn->query("SELECT h.* FROM houses h order by id asc");
 								while($row=$house->fetch_assoc()):
 								?>
 								<tr>
 									<td class="text-center"><?php echo $i++ ?></td>
 									<td class="">
 										<p>Property #: <b><?php echo $row['house_no'] ?></b></p>
-										<p><small>Property Type: <b><?php echo $row['cname'] ?></b></small></p>
 										<p><small>Description: <b><?php echo $row['description'] ?></b></small></p>
 										<p><small>Price: <b><?php echo number_format($row['price'],2) ?></b></small></p>
 									</td>
