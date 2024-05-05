@@ -62,6 +62,9 @@
 <!--									</td>-->
 								</tr>
 								<?php endwhile; ?>
+                                <?php if($i === 1) { ?>
+                                    <tr><td colspan="5" class="text-center">No Data</td></tr>
+                                <?php } ?>
 							</tbody>
 						</table>
 					</div>
