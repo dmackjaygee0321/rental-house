@@ -65,13 +65,21 @@
                             <label for="disabledTextInput" class="form-label">Full Name:</label>
                             <input type="text" id="disabledTextInput" class="form-control" value="<?= $meta["fname"] ." ".$meta["lname"] ?>" readonly>
                         </div>
+                                <div class="mb-3">
+                                    <label for="disabledTextInput" class="form-label">1 Month Advance:</label>
+                                    <input type="text" name="payable_amount" class="form-control"  value="<?= $property["price"] ?>" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="disabledTextInput" class="form-label">1 Month Deposit:</label>
+                                    <input type="text" name="payable_amount" class="form-control"  value="<?= $property["price"] ?>" readonly>
+                                </div>
                         <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">Payable Amount:</label>
                             <input type="text" name="payable_amount" class="form-control"  value="<?= $payment ?>" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">Amount:</label>
-                            <input type="number" name="payment" class="form-control" placeholder="Enter Amount">
+                            <input type="number" name="payment" class="form-control" placeholder="Enter Amount" value="<?= $payment ?>">
                         </div>
                         <div class="mb-3">
                             <label for="disabledTextInput" class="form-label" >Upload Receipt:</label>

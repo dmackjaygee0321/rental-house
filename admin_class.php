@@ -476,6 +476,8 @@ Class Action {
 
             if ($payment <= 0) {
                 $payment = $amount;
+            } else {
+                $payment = $balance;
             }
 
             $this->db->query("update bills set amount_paid = (amount_paid + $payment) where id = ".$row["id"]);

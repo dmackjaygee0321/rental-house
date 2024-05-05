@@ -49,9 +49,7 @@ foreach($qry->fetch_array() as $k => $val){
         <p>Tenant: <b class="tname"></b></p>
         <p>Monthly Rental Rate: <b class="price"></b></p>
         <p>Outstanding Balance: <b class="outstanding"></b></p>
-        <p>Total Paid: <b class="total_paid"></b></p>
         <p>Rent Started: <b class='rent_started'></b></p>
-        <p>Payable Months: <b class="payable_months"></b></p>
         <hr>
     </div>
 </div>
