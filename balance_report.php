@@ -33,11 +33,15 @@
 							</div>
 						</div>
 					<div id="report">
+				
+
 						<div class="on-print">
+						<img src="singkollective.png" class="img-thumbnail"  style="margin-left:100px">
 							 <p><center>Rental Balances Report</center></p>
 							 <p><center>As of <b><?php echo date('F ,Y') ?></b></center></p>
-						</div>
+						</div>	
 						<div class="row">
+						
 							<table class="table table-bordered">
 								<thead>
 									<tr>

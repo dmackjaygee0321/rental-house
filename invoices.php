@@ -25,7 +25,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th class="">Date</th>
+									<th class="">Dates</th>
 									<th class="">Tenant</th>
                                     <th class="">Property #</th>
 									<th class="">Invoice</th>

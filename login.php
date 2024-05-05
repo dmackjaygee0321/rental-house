@@ -36,7 +36,7 @@ header("location:index.php?page=home");
 	main#main{
 		width:100%;
 		height: calc(100%);
-		background:white;
+		background:black;
 	}
 	#login-right{
 		position: absolute;
@@ -93,6 +93,7 @@ div#login-right::before {
     /*background: #000000e0;*/
 }
 
+
 </style>
 
 <body>
@@ -109,7 +110,7 @@ div#login-right::before {
 		  <body>
 		  
 <!-- Image tag -->
-<img src="singkollective-removebg-preview.png"/>
+<img src="singkollective-removebg-preview.png" style="margin-left:250px"/>
 
 </body>
 
@@ -120,14 +121,14 @@ div#login-right::before {
 
   		<div id="login-right" class="bg-light">
   			<div class="w-100">
-			<h4 class="text-white text-center"><b><?php echo $_SESSION['system']['name'] ?></b></h4>
+			<h4 class="text-black text-center"><b>LOGIN NOW TO SINGKOLLECTIVE RENTAL</b></h4>
 			<br>
 			<br>
   			<div class="card col-md-8">
   				<div class="card-body">
   					<form id="login-form" >
   						<div class="form-group">
-  							<label for="username" class="control-label">Username:</label>
+  							<label for="username" class="control-label">Email:</label>
   							<input type="text" id="username" name="username" class="form-control">
   						</div>
   						<div class="form-group">

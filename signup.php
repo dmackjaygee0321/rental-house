@@ -120,7 +120,7 @@ div#login-right::before {
 
   		<div id="login-right" class="bg-light">
   			<div class="w-100">
-			<h4 class="text-white text-center"><b><?php echo $_SESSION['system']['name'] ?></b></h4>
+			<h4 class="text-black text-center"><b>SIGN UP NOW TO SINGKOLLECTIVE</b></h4>
 			<br>
 			<br>
   			<div class="card col-md-8">
