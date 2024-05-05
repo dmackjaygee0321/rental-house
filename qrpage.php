@@ -37,6 +37,9 @@
       }
 
       $payment = $property["price"] * 2;
+  } else {
+
+
   }
   ?>
   <div class="toast" id="alert_toast" role="alert" aria-live="assertive" aria-atomic="true">

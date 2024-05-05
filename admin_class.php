@@ -474,7 +474,7 @@ Class Action {
             $balance = $row["amount"] - $row["amount_paid"];
             $payment = $amount -  $balance;
 
-            if ($payment < 0) {
+            if ($payment <= 0) {
                 $payment = $amount;
             }
 
