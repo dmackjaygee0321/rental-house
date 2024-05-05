@@ -26,7 +26,7 @@
   include('db_connect.php');
   session_start();
   if(isset($_GET["id"])) {
-      $user = $conn->query("SELECT b.*, h.house_no, c.fname, c.lname FROM bills b left join tenants t on t.id = b.tenant_id left join customer c on c.id = t.customer_id left join houses h on h.id = b.house_id where b.id =" . $_GET['id']);
+      $user = $conn->query("SELECT b.*, h.house_no, c.fname, c.lname, t.customer_id FROM bills b left join tenants t on t.id = b.tenant_id left join customer c on c.id = t.customer_id left join houses h on h.id = b.house_id where b.id =" . $_GET['id']);
       foreach ($user->fetch_array() as $k => $v) {
           $meta[$k] = $v;
       }
@@ -43,7 +43,9 @@
   <div class="container mt-5" >
       <div id="msg"></div>
     <form id="manage-user" enctype="multipart/form-data">
-                        <input type="hidden" name="customerId" value="<?= $meta["id"] ?>"/>
+                        <input type="hidden" name="id" value="<?= $meta["id"] ?>"/>
+                        <input type="hidden" name="customer_id" value="<?= $meta["customer_id"] ?>"/>
+                        <input type="hidden" name="house_id" value="<?= $meta["house_id"] ?>"/>
                         <div class="row g-0 text-center">
                             <div class="col-sm-12 col-md-">
                         
@@ -127,7 +129,7 @@
           start_load()
           const formData = new FormData($("#manage-user")[0]);
           $.ajax({
-              url:'ajax.php?action=payment',
+              url:'ajax.php?action=bill_payment',
               method:'POST',
               processData: false,
               contentType: false,
@@ -139,7 +141,7 @@
                           location.href = "http://localhost/house_rental"
                       },1500)
                   }else{
-                      $('#msg').html('<div class="alert alert-danger">Property is not available!</div>')
+                      $('#msg').html('<div class="alert alert-danger">Payment is already Process!</div>')
                       end_load()
                   }
               }

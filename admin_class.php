@@ -345,6 +345,28 @@ Class Action {
             return 1;
     }
 
+    function bill_payment(){
+        extract($_POST);
+        var_dump($_POST);
+
+        $chk = $this->db->query("select * from payments where invoice = '$id' and amount = $payment and approved_date is null and decline is null")->num_rows;
+        if($chk != 0)
+            return 2;
+
+        if(isset($_FILES["file"])) {
+            $file = $_FILES["file"]["name"];
+            $target_dir = "./uploads/";
+            $target_file = $target_dir . basename($_FILES["file"]["name"]);
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+        }
+
+        $chk = $this->db->query("insert into payments values (null, $customer_id, $house_id, $payment, '$id', current_timestamp, '$file', null, null, 'Monthly Payment', null)");
+
+        if($chk)
+            return 1;
+    }
+
     function approve_payment() {
         extract($_POST);
         date_default_timezone_set('Asia/Manila');

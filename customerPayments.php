@@ -26,6 +26,7 @@
                                 <th class="">Property #</th>
                                 <th class="">Invoice</th>
                                 <th class="">Amount</th>
+                                <th class="">Status</th>
                                 <!--									<th class="text-center">Action</th>-->
                             </tr>
                             </thead>
@@ -33,8 +34,14 @@
                             <?php
                             $id = $_SESSION["login_id"];
                             $i = 1;
-                            $invoices = $conn->query("select p.*, c.fname, c.lname, h.house_no from payments p left join customer c on c.id = p.customer_id left join houses h on h.id = p.house_id where p.approved_date is not null and p.customer_id = $id");
+                            $invoices = $conn->query("select p.*, c.fname, c.lname, h.house_no from payments p left join customer c on c.id = p.customer_id left join houses h on h.id = p.house_id where p.customer_id = $id order by p.id desc");
                             while($row=$invoices->fetch_assoc()):
+                                    $status = "Processed";
+
+                                    if($row["approved_date"] == null && $row["decline_date"] == null)
+                                        $status = "Pending Approval";
+                                    else if($row["decline_date"] != null)
+                                        $status = "Declined";
                                 ?>
                                 <tr>
                                     <td class="text-center"><?php echo $i++ ?></td>
@@ -49,6 +56,9 @@
                                     </td>
                                     <td class="text-right">
                                         <p> <b><?php echo number_format($row['amount'],2) ?></b></p>
+                                    </td>
+                                    <td>
+                                        <b><?= $status ?></b>
                                     </td>
                                     <!--									<td class="text-center">-->
                                     <!--										<button class="btn btn-sm btn-outline-primary edit_invoice" type="button" data-id="--><?php //echo $row['id'] ?><!--" >Edit</button>-->

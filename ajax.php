@@ -75,6 +75,12 @@ if($action == "payment"){
 		echo $save;
 }
 
+if($action == "bill_payment"){
+	$save = $crud->bill_payment();
+	if($save)
+		echo $save;
+}
+
 if($action == "approve_payment"){
 	$save = $crud->approve_payment();
 	if($save)
