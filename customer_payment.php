@@ -56,7 +56,7 @@ if($balance == 0)
 <script>
     $(document).ready(function(){
         var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "http://localhost/house_rental/qrpage.php",
+            text: "http://localhost/house_rental/monthlyqrpage.php?id=<?= $_GET['id'] ?>",
             width: 256,
             height: 256,
             colorDark : "#000000",
