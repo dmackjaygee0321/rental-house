@@ -17,10 +17,10 @@ foreach($qry->fetch_array() as $k => $val){
                 <option value=""></option>
 
             <?php 
-            $tenant = $conn->query("SELECT *,concat(lastname,', ',firstname,' ',middlename) as name FROM tenants where status = 1 order by name asc");
+            $tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id");
             while($row=$tenant->fetch_assoc()):
             ?>
-            <option value="<?php echo $row['id'] ?>" <?php echo isset($tenant_id) && $tenant_id == $row['id'] ? 'selected' : '' ?>><?php echo ucwords($row['name']) ?></option>
+            <option value="<?php echo $row['id'] ?>" <?php echo isset($tenant_id) && $tenant_id == $row['id'] ? 'selected' : '' ?>><?php echo "Property #: ".$row["house_no"]." (".ucwords($row['fname']) ." ".ucwords($row['lname']); ?>)</option>
             <?php endwhile; ?>
             </select>
         </div>
@@ -43,6 +43,7 @@ foreach($qry->fetch_array() as $k => $val){
     <div class='d'>
         <large><b>Details</b></large>
         <hr>
+        <p>Property #: <b class="house_no"></b></p>
         <p>Tenant: <b class="tname"></b></p>
         <p>Monthly Rental Rate: <b class="price"></b></p>
         <p>Outstanding Balance: <b class="outstanding"></b></p>
@@ -67,20 +68,20 @@ foreach($qry->fetch_array() as $k => $val){
 
     start_load()
     $.ajax({
-        url:'ajax.php?action=get_tdetails',
+        url:'ajax.php?action=get_tenant',
         method:'POST',
         data:{id:$(this).val(),pid:'<?php echo isset($id) ? $id : '' ?>'},
         success:function(resp){
             if(resp){
                 resp = JSON.parse(resp)
                 var details = $('#details_clone .d').clone()
-                details.find('.tname').text(resp.name)
+                details.find('.house_no').text(resp.house_no)
+                details.find('.tname').text(resp.fname+" "+resp.lname)
                 details.find('.price').text(resp.price)
-                details.find('.outstanding').text(resp.outstanding)
-                details.find('.total_paid').text(resp.paid)
-                details.find('.rent_started').text(resp.rent_started)
-                details.find('.payable_months').text(resp.months)
-                console.log(details.html())
+                details.find('.outstanding').text(resp.outstanding_balance)
+                details.find('.total_paid').text(resp.total_paid)
+                details.find('.rent_started').text(resp.date_in)
+                details.find('.payable_months').text(5)
                 $('#details').html(details)
             }
         },

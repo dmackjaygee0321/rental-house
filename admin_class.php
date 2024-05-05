@@ -420,6 +420,17 @@ Class Action {
 			return 1;
 		}
 	}
+
+    function get_tenant() {
+
+        extract($_POST);
+        $tenants = $this->db->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and tenant_id = t.id) as outstanding_balance, (select sum(amount) from payments where customer_id = c.id and house_id = t.house_id) as total_paid
+                    from tenants t 
+                    left join customer c on c.id = t.customer_id 
+                    left join houses h on h.id = t.house_id where t.id = {$id} ");
+
+        return json_encode($tenants->fetch_assoc());
+    }
 	function get_tdetails(){
 		extract($_POST);
 		$data =array();
