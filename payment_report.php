@@ -46,6 +46,7 @@ $month_of = isset($_GET['month_of']) ? $_GET['month_of'] : date('Y-m');
 						</div>
 					<div id="report">
 						<div class="on-print">
+						<img src="singkollective.png" class="img-thumbnail"  style="margin-left:100px">
 							 <p><center>Rental Payments Report</center></p>
 							 <p><center>for the Month of <b><?php echo date('F ,Y',strtotime($month_of.'-1')) ?></b></center></p>
 						</div>
