@@ -464,7 +464,8 @@ Class Action {
         $tenant = $tenant->fetch_assoc();
 
         $bills = $this->db->query("select * from bills where tenant_id = $tenant_id and amount_paid < amount and is_active = 1 order by STR_TO_DATE(due_date, '%Y-%m-%d') asc");
-
+        $totalPayment = 0;
+        $billIds = [];
         while($row=$bills->fetch_assoc())
         {
             if($amount <= 0)
@@ -477,12 +478,13 @@ Class Action {
                 $payment = $amount;
             }
 
-            $this->db->query("update bills set amount_paid = (amount_paid + $amount) where id = ".$row["id"]);
-
-            $this->db->query("insert into payments values (null, ".$tenant["customer_id"].", ".$tenant["house_id"].", $amount, '".$row["id"]."', current_timestamp, '', current_timestamp, null, 'Monthly Payment', '$invoice')");
-
+            $this->db->query("update bills set amount_paid = (amount_paid + $payment) where id = ".$row["id"]);
+            $totalPayment += $payment;
             $amount -= $payment;
+            $billIds[] = $row["id"];
         }
+
+        $this->db->query("insert into payments values (null, ".$tenant["customer_id"].", ".$tenant["house_id"].", $totalPayment, '".implode(",", $billIds)."', current_timestamp, '', current_timestamp, null, 'Monthly Payment', '$invoice')");
 
         return 1;
 	}

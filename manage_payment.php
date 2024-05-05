@@ -17,8 +17,10 @@ foreach($qry->fetch_array() as $k => $val){
                 <option value=""></option>
 
             <?php 
-            $tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id");
+            $tenant = $conn->query("SELECT t.*, c.fname, c.lname, h.house_no, (SELECT sum(amount - amount_paid) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and house_id = t.house_id) as outstanding_balance from tenants t left join customer c on c.id = t.customer_id left join houses h on h.id = t.house_id");
             while($row=$tenant->fetch_assoc()):
+                if($row["status"] == 0 && $row['outstanding_balance'] == 0)
+                    continue;
             ?>
             <option value="<?php echo $row['id'] ?>" <?php echo isset($tenant_id) && $tenant_id == $row['id'] ? 'selected' : '' ?>><?php echo "Property #: ".$row["house_no"]." (".ucwords($row['fname']) ." ".ucwords($row['lname']); ?>)</option>
             <?php endwhile; ?>

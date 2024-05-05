@@ -27,6 +27,7 @@
 									<th class="text-center">#</th>
 									<th class="">Date</th>
 									<th class="">Tenant</th>
+                                    <th class="">Property #</th>
 									<th class="">Invoice</th>
 									<th class="">Amount</th>
 <!--									<th class="text-center">Action</th>-->
@@ -46,6 +47,9 @@
 									<td class="">
 										 <p> <b><?php echo ucwords($row['fname']) . " " . ucwords($row['lname']) ?></b></p>
 									</td>
+                                    <td class="">
+                                        <p> <b><?php echo ucwords($row['house_no']) ?></b></p>
+                                    </td>
 									<td class="">
 										 <p> <b><?php echo ucwords($row['remarks']) ?></b></p>
 									</td>

@@ -75,7 +75,7 @@ $month_of = isset($_GET['month_of']) ? $_GET['month_of'] : date('Y-m');
 										<td><?php echo date('M d,Y',strtotime($row['date_created'])) ?></td>
 										<td><?php echo ucwords($row['fname']). " ".ucwords($row['lname']) ?></td>
 										<td><?php echo $row['house_no'] ?></td>
-										<td><?php echo $row['invoice'] ?></td>
+										<td><?php echo $row['remarks'] ?></td>
 										<td class="text-right"><?php echo number_format($row['amount'],2) ?></td>
 									</tr>
 								<?php endwhile; ?>
