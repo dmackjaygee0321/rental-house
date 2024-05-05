@@ -73,10 +73,12 @@
 							<tbody>
 								<?php
 								$i = 1;
-								$house = $conn->query("SELECT h.* FROM houses h order by id asc");
+								$house = $conn->query("SELECT h.*, (
+                       (select count(id) from tenants where house_id = h.id and status = 1) = 0
+                       and (select count(id) from payments where house_id = h.id and approved_date IS NULL and decline_date IS NULL) = 0) as sold FROM houses h order by id asc");
 								while($row=$house->fetch_assoc()):
 								?>
-								<tr>
+								<tr style="<?=$row['sold'] == 1 ? 'background-color: red' : ''?>">
 									<td class="text-center"><?php echo $i++ ?></td>
 									<td class="">
 										<p>Property #: <b><?php echo $row['house_no'] ?></b></p>
