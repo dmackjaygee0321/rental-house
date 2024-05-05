@@ -122,10 +122,8 @@ Class Action {
             $data .= ", username = '$username' ";
             if (!empty($password))
                 $data .= ", password = '" . md5($password) . "' ";
+            if(isset($type))
             $data .= ", type = '$type' ";
-            if ($type == 1)
-                $establishment_id = 0;
-            $data .= ", establishment_id = '$establishment_id' ";
             $chk = $this->db->query("Select * from users where username = '$username' and id !='$id' ")->num_rows;
             if ($chk > 0) {
                 return 2;
@@ -159,6 +157,32 @@ Class Action {
 
         }
 	}
+
+
+    function save_customer()
+    {
+        extract($_POST);
+            $chk = $this->db->query("Select * from customer where email = '$username' and id !='$id' ")->num_rows;
+            if ($chk > 0) {
+                return 2;
+                exit;
+            }
+
+            $updatePassword = "";
+            if (!empty($password))
+                $updatePassword = ", password = '" . md5($password) . "' ";
+
+            if (empty($id)) {
+                $save = $this->db->query("INSERT INTO customer values (null,'$fname', '$lname', '$username', '$contact', '".md5($password)."', current_timestamp)");
+            } else {
+                $save = $this->db->query("UPDATE customer set fname = '$fname', lname = '$lname', email = '$username', contact = '$contact' $updatePassword where id = " . $id);
+            }
+
+
+            if ($save) {
+                return 1;
+            }
+    }
 	function delete_user(){
 		extract($_POST);
 		$delete = $this->db->query("DELETE FROM users where id = ".$id);

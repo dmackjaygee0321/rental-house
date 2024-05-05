@@ -2,40 +2,19 @@
 include('db_connect.php');
 session_start();
 if(isset($_GET['id'])) {
-    if ($_SESSION["login_type"] != 3) {
-        $user = $conn->query("SELECT * FROM users where id =" . $_GET['id']);
-        foreach ($user->fetch_array() as $k => $v) {
-            $meta[$k] = $v;
-        }
-    } else {
         $user = $conn->query("SELECT * FROM customer where id =" . $_GET['id']);
         foreach ($user->fetch_array() as $k => $v) {
             $meta[$k] = $v;
         }
-    }
 }
+$meta["type"] = 3;
 ?>
 <div class="container-fluid">
 	<div id="msg"></div>
 	
-	<form action="" id="manage-user">	
+	<form action="" id="manage-user">
 		<input type="hidden" name="id" value="<?php echo isset($meta['id']) ? $meta['id']: '' ?>">
-        <?php
-            if($_SESSION["login_type"] != 3) {
-        ?>
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="form-control" value="<?php echo isset($meta['name']) ? $meta['name']: '' ?>" required>
-            </div>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
-                </div>
-        <?php } ?>
-
-        <?php
-        if($_SESSION["login_type"] == 3) {
-            ?>
+        <input type="hidden" name="type" value="3">
             <div class="form-group">
                 <label for="fname">First Name</label>
                 <input type="text" name="fname" id="fname" class="form-control" value="<?php echo isset($meta['fname']) ? $meta['fname']: '' ?>" required>
@@ -48,11 +27,10 @@ if(isset($_GET['id'])) {
                 <label for="contact">Contact</label>
                 <input type="text" name="contact" id="contact" class="form-control" value="<?php echo isset($meta['contact']) ? $meta['contact']: '' ?>" required>
             </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email']: '' ?>" required  autocomplete="off">
-            </div>
-        <?php } ?>
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email']: '' ?>" required  autocomplete="off">
+		</div>
 		<div class="form-group">
 			<label for="password">Password</label>
 			<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
@@ -83,7 +61,7 @@ if(isset($_GET['id'])) {
 		e.preventDefault();
 		start_load()
 		$.ajax({
-			url:'ajax.php?action=save_user',
+			url:'ajax.php?action=save_customer',
 			method:'POST',
 			data:$(this).serialize(),
 			success:function(resp){
