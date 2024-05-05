@@ -440,22 +440,27 @@ Class Action {
     }
 	function save_tenant(){
 		extract($_POST);
-		$data = " firstname = '$firstname' ";
-		$data .= ", lastname = '$lastname' ";
-		$data .= ", middlename = '$middlename' ";
-		$data .= ", email = '$email' ";
-		$data .= ", contact = '$contact' ";
-		$data .= ", house_id = '$house_id' ";
-		$data .= ", date_in = '$date_in' ";
-			if(empty($id)){
-				
-				$save = $this->db->query("INSERT INTO tenants set $data");
-			}else{
-				$save = $this->db->query("UPDATE tenants set $data where id = $id");
-			}
-		if($save)
-			return 1;
-	}
+
+
+        $house = $this->db->query("SELECT * FROM houses where id =".$house_id);
+        $house = $house->fetch_assoc();
+
+        $this->db->query("INSERT INTO tenants values(null, ".$house_id.", 1, current_timestamp, ".$customer_id.")");
+
+        $tenant_id = $this->db->insert_id;
+        $currentDate = new DateTime($date_in);
+        $due_date = $currentDate->format('Y-m-d');
+        $advancePayment = $house["price"] * 2;
+        $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$house_id.", ".$advancePayment.", 0, '$due_date', current_timestamp, 1)");
+        $currentDate->add(new DateInterval('P2M'));
+        for ($x = 1;$x <= 10; $x++) {
+            $currentDate->add(new DateInterval('P1M'));
+            $due_date = $currentDate->format('Y-m-d');
+            $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$house_id.", ".$house["price"].", 0, '$due_date', current_timestamp, 1)");
+        }
+
+        return 1;
+    }
 	function delete_tenant(){
 		extract($_POST);
         $tenant = $this->db->query("select * from tenants where id = $id");

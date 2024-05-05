@@ -10,44 +10,33 @@ foreach($qry->fetch_array() as $k => $val){
 <div class="container-fluid">
 	<form action="" id="manage-tenant">
 		<input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
-		<div class="row form-group">
-			<div class="col-md-4">
-				<label for="" class="control-label">Last Name</label>
-				<input type="text" class="form-control" name="lastname"  value="<?php echo isset($lastname) ? $lastname :'' ?>" required>
-			</div>
-			<div class="col-md-4">
-				<label for="" class="control-label">First Name</label>
-				<input type="text" class="form-control" name="firstname"  value="<?php echo isset($firstname) ? $firstname :'' ?>" required>
-			</div>
-			<div class="col-md-4">
-				<label for="" class="control-label">Middle Name</label>
-				<input type="text" class="form-control" name="middlename"  value="<?php echo isset($middlename) ? $middlename :'' ?>">
-			</div>
-		</div>
 		<div class="form-group row">
-			<div class="col-md-4">
-				<label for="" class="control-label">Email</label>
-				<input type="email" class="form-control" name="email"  value="<?php echo isset($email) ? $email :'' ?>" required>
-			</div>
-			<div class="col-md-4">
-				<label for="" class="control-label">Contact #</label>
-				<input type="text" class="form-control" name="contact"  value="<?php echo isset($contact) ? $contact :'' ?>" required>
-			</div>
-			
-		</div>
-		<div class="form-group row">
-			<div class="col-md-4">
-				<label for="" class="control-label">House</label>
-				<select name="house_id" id="" class="custom-select select2">
-					<option value=""></option>
-					<?php 
-					$house = $conn->query("SELECT * FROM houses where id not in (SELECT house_id from tenants where status = 1) ".(isset($house_id)? " or id = $house_id": "" )." ");
-					while($row= $house->fetch_assoc()):
-					?>
-					<option value="<?php echo $row['id'] ?>" <?php echo isset($house_id) && $house_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['house_no'] ?></option>
-					<?php endwhile; ?>
-				</select>
-			</div>
+            <div class="col-md-4">
+                <label for="" class="control-label">User</label>
+                <select name="customer_id" id="" class="custom-select select2">
+                    <option value="">Select User</option>
+                    <?php
+                    $house = $conn->query("SELECT * from customer");
+                    while($row= $house->fetch_assoc()):
+                        ?>
+                        <option value="<?php echo $row['id'] ?>" <?php echo isset($house_id) && $house_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['fname'] . " " . $row['lname'] ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="control-label">Property #</label>
+                <select name="house_id" id="" class="custom-select select2">
+                    <option value="">Select Property</option>
+                    <?php
+                    $house = $conn->query("SELECT * FROM houses h where (
+                       (select count(id) from tenants where house_id = h.id and status = 1) = 0
+                       and (select count(id) from payments where house_id = h.id and approved_date IS NULL and decline_date IS NULL) = 0) order by id asc");
+                    while($row= $house->fetch_assoc()):
+                        ?>
+                        <option value="<?php echo $row['id'] ?>" <?php echo isset($house_id) && $house_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['house_no'] ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 			<div class="col-md-4">
 				<label for="" class="control-label">Registration Date</label>
 				<input type="date" class="form-control" name="date_in"  value="<?php echo isset($date_in) ? date("Y-m-d",strtotime($date_in)) :'' ?>" required>
