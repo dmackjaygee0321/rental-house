@@ -424,7 +424,7 @@ Class Action {
     function get_tenant() {
 
         extract($_POST);
-        $tenants = $this->db->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and tenant_id = t.id) as outstanding_balance, (select sum(amount) from payments where customer_id = c.id and house_id = t.house_id) as total_paid
+        $tenants = $this->db->query("SELECT t.*, c.fname, c.lname, h.house_no, h.price, (select date_created from payments where t.customer_id = customer_id and approved_date is not null order by date_created DESC limit 1) as last_payment, (SELECT sum(amount - amount_paid) FROM `bills` WHERE STR_TO_DATE(due_date, '%Y-%m-%d') < CURRENT_TIMESTAMP() and is_active = 1 and customer_id = c.id and tenant_id = t.id) as outstanding_balance, (select sum(amount) from payments where customer_id = c.id and house_id = t.house_id) as total_paid
                     from tenants t 
                     left join customer c on c.id = t.customer_id 
                     left join houses h on h.id = t.house_id where t.id = {$id} ");
@@ -460,26 +460,31 @@ Class Action {
 	
 	function save_payment(){
 		extract($_POST);
-		$data = "";
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id','ref_code')) && !is_numeric($k)){
-				if(empty($data)){
-					$data .= " $k='$v' ";
-				}else{
-					$data .= ", $k='$v' ";
-				}
-			}
-		}
-		if(empty($id)){
-			$save = $this->db->query("INSERT INTO payments set $data");
-			$id=$this->db->insert_id;
-		}else{
-			$save = $this->db->query("UPDATE payments set $data where id = $id");
-		}
+        $tenant = $this->db->query("select * from tenants where id = $tenant_id");
+        $tenant = $tenant->fetch_assoc();
 
-		if($save){
-			return 1;
-		}
+        $bills = $this->db->query("select * from bills where tenant_id = $tenant_id and amount_paid < amount and is_active = 1 order by STR_TO_DATE(due_date, '%Y-%m-%d') asc");
+
+        while($row=$bills->fetch_assoc())
+        {
+            if($amount <= 0)
+                break;
+
+            $balance = $row["amount"] - $row["amount_paid"];
+            $payment = $amount -  $balance;
+
+            if ($payment < 0) {
+                $payment = $amount;
+            }
+
+            $this->db->query("update bills set amount_paid = (amount_paid + $amount) where id = ".$row["id"]);
+
+            $this->db->query("insert into payments values (null, ".$tenant["customer_id"].", ".$tenant["house_id"].", $amount, '".$row["id"]."', current_timestamp, '', current_timestamp, null, 'Monthly Payment', '$invoice')");
+
+            $amount -= $payment;
+        }
+
+        return 1;
 	}
 	function delete_payment(){
 		extract($_POST);
