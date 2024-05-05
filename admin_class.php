@@ -323,6 +323,20 @@ Class Action {
 		$data .= ", description = '$description' ";
 		$data .= ", price = '$price' ";
 
+        if(isset($_FILES["file"])) {
+            $fileType = $_FILES["file"]["type"];
+            $allowedTypes = array("image/jpeg", "image/png", "image/gif", "application/pdf"); // Add more allowed file types as needed
+
+            if (in_array($fileType, $allowedTypes)) {
+                $file = $_FILES["file"]["name"];
+                $target_dir = "./uploads/";
+                $target_file = $target_dir . basename($_FILES["file"]["name"]);
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+                $data .= ", file = '" . $file . "'";
+            }
+        }
+
         if(!$id)
             $id = 0;
 		$chk = $this->db->query("SELECT * FROM houses where house_no = '$house_no' and id !=  $id ")->num_rows;

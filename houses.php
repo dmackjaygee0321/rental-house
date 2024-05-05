@@ -6,7 +6,7 @@
 		<div class="row">
 			<!-- FORM Panel -->
 			<div class="col-md-4">
-			<form action="" id="manage-house">
+			<form action="" id="manage-house" enctype="multipart/form-data">>
 				<div class="card">
 					<div class="card-header">
 						    PROPERTY Form
@@ -41,6 +41,10 @@
 								<label class="control-label">Price</label>
 								<input type="number" class="form-control text-right" name="price" step="any" required="">
 							</div>
+                            <div class="form-group">
+                                <label class="control-label">Image</label>
+                                <input type="file" class="form-control text-right" name="file">
+                            </div>
 					</div>
 					<div class="card-footer">
 						<div class="row">
@@ -86,6 +90,7 @@
 										<p><small>Price: <b><?php echo number_format($row['price'],2) ?></b></small></p>
 									</td>
 									<td class="text-center">
+                                        <button class="btn btn-sm btn-secondary view_image" type="button" data-id="<?php echo $row['file'] ?>">View Image</button>
 										<button class="btn btn-sm btn-primary edit_house" type="button" data-id="<?php echo $row['id'] ?>"  data-house_no="<?php echo $row['house_no'] ?>" data-description="<?php echo $row['description'] ?>" data-category_id="<?php echo $row['category_id'] ?>" data-price="<?php echo $row['price'] ?>" >Edit</button>
 										<button class="btn btn-sm btn-danger delete_house" type="button" data-id="<?php echo $row['id'] ?>">Delete</button>
 									</td>
@@ -98,7 +103,25 @@
 			</div>
 			<!-- Table Panel -->
 		</div>
-	</div>	
+	</div>
+    <div class="modal" tabindex="-1" role="dialog" id="receiptModal">
+        <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="viewImage" width="100%" height="100%" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <style>
@@ -174,5 +197,11 @@
 			}
 		})
 	}
+
+    $(".view_image").on("click", function () {
+        const src = $(this).attr("data-id")
+        $("#viewImage").attr("src", "./uploads/"+src)
+        $("#receiptModal").modal("show")
+    })
 	$('table').dataTable()
 </script>

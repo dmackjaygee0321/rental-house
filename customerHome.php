@@ -54,12 +54,14 @@
                        and (select count(id) from payments where house_id = h.id and approved_date IS NULL and decline_date IS NULL) = 0) order by id asc");
         while($row=$house->fetch_assoc()): ?>
         <div class="col-lg-4" style="padding-top: 30px">
-            <div class="card" style="margin: 5px">
-                <img class="card-img-top" src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg" alt="Card image cap">
-                <div class="card-body">
+            <div class="card" style="margin: 5px;">
+                <img class="card-img-top" src="./uploads/<?= $row["file"] ?>" alt="Card image cap" style="height: 300px">
+                <div class="card-body" style="min-height: 250px">
                     <h5 class="card-title">Property #: <?= $row["house_no"] ?></h5>
                     <p class="card-text"><?= $row["description"] ?></p>
                     <p>Price: <span style="font-weight: bolder"><?= number_format($row['price'],2) ?></span></p>
+                </div>
+                <div class="card-footer">
                     <a href="javascript:void(0)" data-id="<?= $row["id"] ?>" class="btn btn-primary rent-now">Rent Now</a>
                 </div>
             </div>
