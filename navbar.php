@@ -23,10 +23,10 @@
 				<!-- <a href="index.php?page=site_settings" class="nav-item nav-site_settings"><span class='icon-field'><i class="fa fa-cogs text-danger"></i></span> System Settings</a> -->
 			<?php endif; ?>
             <?php } else { ?>
-                    <a href="index.php?page=information" class="nav-item nav-information"><span class='icon-field'><i class="fa fa-info-circle "></i></span> Information</a>
                     <a href="index.php?page=customerPayments" class="nav-item nav-customerPayments"><span class='icon-field'><i class="fa fa-file-invoice "></i></span> Payments</a>
                     <a href="index.php?page=customer_balance_report" class="nav-item nav-customer_balance_report"><span class='icon-field'><i class="fa fa-file-invoice "></i></span> Bills</a>
-            <?php } ?>
+                    <a href="index.php?page=information" class="nav-item nav-information"><span class='icon-field'><i class="fa fa-info-circle "></i></span> Information</a>
+                <?php } ?>
         </div>
 
 </nav>
