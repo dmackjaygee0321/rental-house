@@ -347,9 +347,8 @@ Class Action {
 
     function bill_payment(){
         extract($_POST);
-        var_dump($_POST);
 
-        $chk = $this->db->query("select * from payments where invoice = '$id' and amount = $payment and approved_date is null and decline is null")->num_rows;
+        $chk = $this->db->query("select * from payments where invoice = '$id' and amount = $payment and approved_date is null")->num_rows;
         if($chk != 0)
             return 2;
 
@@ -399,6 +398,8 @@ Class Action {
                 $due_date = $currentDate->format('Y-m-d');
                 $this->db->query("INSERT INTO bills values(null, $tenant_id, ".$payment["house_id"].", ".$house["price"].", 0, '$due_date', current_timestamp, 1)");
             }
+        } else {
+            $this->db->query("update bills set amount_paid = (amount_paid + ".$payment["amount"].") where id = ".$payment["invoice"]);
         }
 
         $this->db->query("update payments set approved_date = current_timestamp, remarks = '$remarks' where id =".$id);
